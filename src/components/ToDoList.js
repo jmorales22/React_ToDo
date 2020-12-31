@@ -16,7 +16,7 @@ function ToDoList() {
     }
     let newTodo = { text: text, id: uuidv4() };
     setToDo((todos = [newTodo, ...todos]));
-    setText((text = ''));
+    setText((''));
   };
 
   const deleteToDo = (ToDoId) => {
@@ -25,10 +25,9 @@ function ToDoList() {
     for (let i = 0; i < todos.length; i++) {
       if (todos[i].id === ToDoId) {
         toDoArray.splice(i, 1);
-        return toDoArray;
       }
     }
-    setToDo(todos = toDoArray);
+    setToDo([...toDoArray])
   };
 
   return (
