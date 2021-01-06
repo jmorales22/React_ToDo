@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import { useCookies } from 'react-cookie';
 
 function ToDoList() {
   let [text, setText] = useState('');
   let [todos, setToDo] = useState([]);
+  let [cookies, setCookie] = useCookies(['react_todos']);
+ 
+  function setTodoCookie() {
+    const stringifiedTodos = JSON.stringify({'react_todos': todos})
+    setCookie('react_todos', stringifiedTodos);
+  }
 
   const handleChange = (e) => {
     setText((text = e.target.value));
@@ -16,6 +23,7 @@ function ToDoList() {
     }
     let newTodo = { text: text, id: uuidv4() };
     setToDo((todos = [newTodo, ...todos]));
+    setTodoCookie();
     setText((''));
   };
 
@@ -27,8 +35,13 @@ function ToDoList() {
         toDoArray.splice(i, 1);
       }
     }
-    setToDo([...toDoArray])
+    setToDo([...toDoArray]);
+    setTodoCookie();
   };
+
+  useEffect(() => {
+    setToDo(cookies)
+  });
 
   return (
     <>
