@@ -6,14 +6,14 @@ function ToDoList() {
   let [text, setText] = useState('');
   let [todos, setToDo] = useState([]);
   let [cookies, setCookie] = useCookies(['react_todos']);
- 
-  function setTodoCookie() {
-    const stringifiedTodos = JSON.stringify({'react_todos': todos})
-    setCookie('react_todos', stringifiedTodos);
+  let [handleCookie, setHandleCookie] = useState(false);
+
+  function setTodoCookie(newTodo) {
+    setCookie('react_todos', newTodo);
   }
 
   const handleChange = (e) => {
-    setText((text = e.target.value));
+    setText(e.target.value);
   };
 
   const handleSubmit = (e) => {
@@ -22,9 +22,9 @@ function ToDoList() {
       return;
     }
     let newTodo = { text: text, id: uuidv4() };
-    setToDo((todos = [newTodo, ...todos]));
-    setTodoCookie();
-    setText((''));
+    setToDo([newTodo, ...todos]);
+    setTodoCookie([newTodo, ...todos]);
+    setText('');
   };
 
   const deleteToDo = (ToDoId) => {
@@ -36,12 +36,15 @@ function ToDoList() {
       }
     }
     setToDo([...toDoArray]);
-    setTodoCookie();
+    setTodoCookie([...toDoArray]);
   };
 
   useEffect(() => {
-    setToDo(cookies)
-  });
+    if (handleCookie === false) {
+      setToDo(cookies.react_todos || []);
+      setHandleCookie(true);
+    }
+  }, [cookies.react_todos]);
 
   return (
     <>
